@@ -162,7 +162,7 @@
             <div class="card"><small>Extra · porción · bien picante</small><b>BBQ Picante</b><span>La BBQ de la casa, bien picante — para los que aguantan.</span><div class="price">$1.00</div><div class="qty"><button type="button" data-dec="picante">−</button><output id="q-picante">0</output><button type="button" data-inc="picante">+</button></div><button type="button" class="add" data-add="picante"><svg class="ico"><use href="#icon-rifle"/></svg>Agregar a mi orden</button></div>
             <div class="card"><small>Extra · 8 piezas</small><b>Aros de Cebolla</b><span>8 aros gruesos con el mismo empanizado de las alitas.</span><div class="price">$2.50</div><div class="qty"><button type="button" data-dec="aros">−</button><output id="q-aros">0</output><button type="button" data-inc="aros">+</button></div><button type="button" class="add" data-add="aros"><svg class="ico"><use href="#icon-rifle"/></svg>Agregar a mi orden</button></div>
             <div class="card"><small>Ración extra</small><b>Papas Fritas Extra</b><span>La ración extra de papas (150 g), doradas y con su sal, para los que siempre quieren más.</span><div class="price">$1.50</div><div class="qty"><button type="button" data-dec="papas">−</button><output id="q-papas">0</output><button type="button" data-inc="papas">+</button></div><button type="button" class="add" data-add="papas"><svg class="ico"><use href="#icon-rifle"/></svg>Agregar a mi orden</button></div>
-            <div class="card"><small>Ración extra · 150 g</small><b>Ensalada Extra</b><span>Otro envase de 150 g de la ensalada americana de la casa, fresquita.</span><div class="price">$ —</div><div class="qty"><button type="button" data-dec="ensalada">−</button><output id="q-ensalada">0</output><button type="button" data-inc="ensalada">+</button></div><button type="button" class="add" data-add="ensalada"><svg class="ico"><use href="#icon-rifle"/></svg>Agregar a mi orden</button></div>
+            <div class="card"><small>Ración extra · 150 g</small><b>Ensalada Extra</b><span>Otro envase de 150 g de la ensalada americana de la casa, fresquita.</span><div class="price">$1.50</div><div class="qty"><button type="button" data-dec="ensalada">−</button><output id="q-ensalada">0</output><button type="button" data-inc="ensalada">+</button></div><button type="button" class="add" data-add="ensalada"><svg class="ico"><use href="#icon-rifle"/></svg>Agregar a mi orden</button></div>
           </div>
         </div>
         <div class="panel">
@@ -219,7 +219,7 @@ function bugle(){ playSfx(SFX.bugle,1.0); }
 function helicopter(){ if(!soundOn) return; try{ SFX.heli.currentTime=0; SFX.heli.volume=1.0; SFX.heli.play().catch(()=>{}); }catch(e){} }
 document.getElementById('pmBanco').textContent=CONFIG.pagoMovil.banco; document.getElementById('pmTel').textContent=CONFIG.pagoMovil.telefono; document.getElementById('pmCed').textContent=CONFIG.pagoMovil.cedula; document.getElementById('pmZinli').textContent=CONFIG.zinli; document.getElementById('pmBinance').innerHTML='User-cd06c · <a href="'+CONFIG.binance+'" target="_blank" rel="noopener" style="color:var(--dorado);font-weight:800">toca aquí para pagar</a>';
 const names={huey:'Misión Huey',cobra:'Misión Cobra',chinook:'Misión Chinook',cadete:'Pequeño Cadete',postre:'Postre WOW',vinagre:'Vinagre Artesanal',salsa:'Salsas WOW',papas:'Papas Fritas Extra',ensalada:'Ensalada Extra (150 g)',aros:'Aros de Cebolla (8 piezas)',picante:'BBQ Picante (125 ml)'};
-const prices={huey:8,cobra:15,chinook:24,vinagre:2.5,salsa:0.75,aros:2.5,picante:1,papas:1.5};
+const prices={huey:8,cobra:15,chinook:24,vinagre:2.5,salsa:0.75,aros:2.5,picante:1,papas:1.5,ensalada:1.5};
 const drink={huey:'te',cobra:'te'};
 let salsaSabor='bbq'; let vinagreSabor='guayaba';
 function drinkTag(k){ if(k==='chinook') return ' (Botella refresco 2L)'; if(k!=='huey'&&k!=='cobra') return ''; return drink[k]==='refresco'?' (Refresco)':' (Té)'; }
@@ -275,7 +275,7 @@ document.getElementById('orderBtn').addEventListener('click', async ()=>{
     if(k==='huey'||k==='cobra'){ kItems.push({product:kMap[k],qty:v,bebida:drink[k]}); }
     else if(k==='salsa'){ kItems.push({product:(salsaSabor==='tamarindo'?'Salsa de Tamarindo':'Salsa BBQ'),qty:v,bebida:null}); }
     else if(kMap[k]){ kItems.push({product:kMap[k],qty:v,bebida:null}); }
-    else { extras.push(names[k]+' × '+v+' (precio por confirmar)'); }
+    else { extras.push(names[k]+' × '+v+(prices[k] ? ' — $'+(prices[k]*v).toFixed(2) : ' (precio por confirmar)')); }
   });
   const notesParts=[];
   if(cart.chinook&&cups>0) notesParts.push('Vasos desechables × '+cups+' (incluidos)');
