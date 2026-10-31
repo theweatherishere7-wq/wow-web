@@ -279,6 +279,11 @@ document.getElementById('orderBtn').addEventListener('click', async ()=>{
     pago=del[0].value.trim(); dir=del[1].value.trim();
     if(!nom||!tel||!dir){ alert('Para delivery completa tu nombre, tu teléfono y la dirección exacta.'); return; }
   }
+  const btnO=document.getElementById('orderBtn');
+  const textoBtn=btnO.textContent;
+  btnO.dataset.enviando='1'; btnO.disabled=true; btnO.style.opacity='.6'; btnO.textContent='ENVIANDO TU ORDEN…';
+  const liberarBtn=()=>{ btnO.disabled=false; btnO.dataset.enviando='0'; btnO.style.opacity=''; btnO.textContent=textoBtn; };
+  setTimeout(liberarBtn,45000);
   const NL=String.fromCharCode(10);
   const lineas=items.map(([k,v])=> prices[k] ? '• '+names[k]+drinkTag(k)+salsaTag(k)+vinagreTag(k)+' × '+v+' — $'+(prices[k]*v).toFixed(2) : '• '+names[k]+drinkTag(k)+salsaTag(k)+vinagreTag(k)+' × '+v+' (precio por confirmar)');
   if(cart.chinook&&cups>0) lineas.push('• Vasos desechables × '+cups+' (incluidos)');
@@ -309,8 +314,6 @@ document.getElementById('orderBtn').addEventListener('click', async ()=>{
   if(isDel) notesParts.push('Delivery APARTE, según la distancia (a confirmar).');
   let kNum=null;
   if(kItems.length){
-    document.getElementById('orderBtn').dataset.enviando='1';
-    setTimeout(()=>{ document.getElementById('orderBtn').dataset.enviando='0'; },10000);
     try{
       const bebidasUsadas=kItems.filter(x=>x.bebida).map(x=>x.bebida);
       const distintas=bebidasUsadas.filter((b,idx)=>bebidasUsadas.indexOf(b)===idx);
@@ -324,8 +327,12 @@ document.getElementById('orderBtn').addEventListener('click', async ()=>{
     }catch(e){ kNum=null; }
   }
   if(kNum){ msg+=NL+'Pedido Cocina #'+kNum+' · PAGA PRIMERO y manda tu comprobante por aquí.'; }
-  window.open('https://wa.me/'+CONFIG.whatsapp+'?text='+encodeURIComponent(msg),'_blank');
-  const st=document.getElementById('stamp'); st.style.display='block'; st.textContent = kNum ? '★ PEDIDO #'+kNum+' EN COCINA · PAGA Y MANDA TU COMPROBANTE ★' : (isDel ? '★ ORDEN ENVIADA · EL HELICÓPTERO SALE EN CAMINO ★' : '★ ORDEN ENVIADA · TE ESPERAMOS EN EL PUESTO ★'); });
+  const urlWa='https://wa.me/'+CONFIG.whatsapp+'?text='+encodeURIComponent(msg);
+  const ventanaWa=window.open(urlWa,'_blank');
+  const st=document.getElementById('stamp'); st.style.display='block'; st.textContent = kNum ? '★ PEDIDO #'+kNum+' EN COCINA · PAGA Y MANDA TU COMPROBANTE ★' : (isDel ? '★ ORDEN ENVIADA · EL HELICÓPTERO SALE EN CAMINO ★' : '★ ORDEN ENVIADA · TE ESPERAMOS EN EL PUESTO ★');
+  if(!ventanaWa){ const a=document.createElement('a'); a.href=urlWa; a.target='_blank'; a.rel='noopener'; a.textContent='TOCA AQUÍ PARA ABRIR WHATSAPP Y ENVIAR TU ORDEN'; a.style.cssText='display:block;margin-top:10px;color:#fff;text-decoration:underline;font-weight:800;'; st.appendChild(a); }
+  btnO.textContent='✔ ORDEN ENVIADA';
+  st.scrollIntoView({behavior:'smooth',block:'center'}); });
 
 document.getElementById('ctaBtn').addEventListener('click',()=>{ shot(); document.querySelector('.cards').scrollIntoView({behavior:'smooth'}); });
 document.getElementById('soundBtn').addEventListener('click',e=>{ soundOn=!soundOn; e.target.textContent = soundOn?'SONIDO DE JUEGO: ON':'SONIDO: OFF'; if(soundOn) metalClick(); });
