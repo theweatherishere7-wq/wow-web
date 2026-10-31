@@ -267,6 +267,7 @@ document.querySelectorAll('[data-cupdec]').forEach(b=>b.addEventListener('click'
 document.querySelectorAll('#modeBox label').forEach(l=>l.addEventListener('click',()=>{ document.querySelectorAll('#modeBox label').forEach(x=>x.classList.remove('on')); l.classList.add('on');
   const isDel=l.querySelector('input').value==='delivery'; document.getElementById('delFields').classList.toggle('open',isDel); if(isDel) helicopter(); else bugle(); }));
 document.getElementById('orderBtn').addEventListener('click', async ()=>{
+  if(document.getElementById('orderBtn').dataset.enviando==='1') return;
   const isDel=document.querySelector('input[name=modo]:checked').value==='delivery'; shot();
   const items=Object.entries(cart).filter(([k,v])=>v>0);
   if(!items.length){ alert('Tu orden está vacía: agrega al menos un combo con el botón Agregar.'); return; }
@@ -308,6 +309,8 @@ document.getElementById('orderBtn').addEventListener('click', async ()=>{
   if(isDel) notesParts.push('Delivery APARTE, según la distancia (a confirmar).');
   let kNum=null;
   if(kItems.length){
+    document.getElementById('orderBtn').dataset.enviando='1';
+    setTimeout(()=>{ document.getElementById('orderBtn').dataset.enviando='0'; },10000);
     try{
       const bebidasUsadas=kItems.filter(x=>x.bebida).map(x=>x.bebida);
       const distintas=bebidasUsadas.filter((b,idx)=>bebidasUsadas.indexOf(b)===idx);
